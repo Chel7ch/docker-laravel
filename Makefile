@@ -1,21 +1,21 @@
 SHELL := /bin/bash
 
-# make composer a=update
+# make composer $=update
 composer:
-ifdef $(a)
-	   docker-compose run --rm composer $(a)
+ifdef $
+	docker-compose run --rm composer $$
 else
-	   docker-compose run --rm composer update
+	docker-compose run --rm composer update
 endif
 
 mix:
 	docker-compose run --rm npm run dev
 
 artisan:
-ifdef $(a)
-	   docker-compose run --rm artisan $(a)
+ifdef $
+	docker-compose run --rm artisan $$
 else
-	   docker-compose run --rm artisan list
+	docker-compose run --rm artisan list
 endif
 
 migrate:
