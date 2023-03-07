@@ -1,4 +1,5 @@
 mysql
 .idea
 .git
+logs
 src/node_modules

@@ -6,8 +6,8 @@ networks:
 services:
   app:
     build:
-      context: ./dockerfiles
-      dockerfile: nginx.dockerfile
+      context: .
+      dockerfile: dockerfiles/nginx.dockerfile
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}
@@ -16,6 +16,8 @@ services:
       - "80:80"
     volumes:
       - ./src:/var/www/html:delegated
+      - ./logs/nginx:/var/log/nginx
+      - ./config/php/php.ini:/usr/local/etc/php/php.ini
     depends_on:
       - php
       - redis
@@ -32,14 +34,15 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: homestead
-      MYSQL_USER: homestead
-      MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: rosetta
+      MYSQL_USER: dim
+      MYSQL_PASSWORD: pass
+      MYSQL_ROOT_PASSWORD: pass
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
-      - ./dockerfiles/mysql:/var/lib/mysql
+      - ./config/mysql:/var/lib/mysql
+      - ./logs/mysql:/var/log/mysql
     networks:
       - laravel
 
@@ -51,18 +54,17 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
-      PMA_USER: homestead
-      PMA_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_USER: homestead
-      MYSQL_PASSWORD: secret
+      PMA_USER: dim
+      PMA_PASSWORD: pass
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_USER: dim
+      MYSQL_PASSWORD: pass
       UPLOAD_LIMIT: 512M
       MEMORY_LIMIT: 512M
     ports:
       - 8082:80
     volumes:
-      - /sessions
-      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/conf.d/php-phpmyadmin.ini
+      - ./config/php/php.ini:/usr/local/etc/php/php.ini
     networks:
       - laravel
 
@@ -87,6 +89,8 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
+    volumes:
+      - ./logs/redis:/var/log/redis
     networks:
       - laravel
 

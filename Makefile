@@ -29,3 +29,9 @@ stop:
 
 rebuild:
 	docker-compose build --no-cache
+
+lampstop:
+	sudo systemctl stop nginx &&  sudo systemctl stop mysql && sudo systemctl stop postgresql
+
+lamp:
+	sudo systemctl start nginx &&  sudo systemctl start mysql && sudo systemctl start postgresql
